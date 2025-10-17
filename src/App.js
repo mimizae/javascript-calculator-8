@@ -1,5 +1,34 @@
+import { MissionUtils } from "@woowacourse/mission-utils";
+
+// 계산기 로직이 들어올 곳
 class App {
-  async run() {}
+  async run() {
+    // 1. MissionUtils.Console.readLineAsync()를 사용하여 사용자 입력을 받는다.
+    const input = await MissionUtils.Console.readLineAsync(
+      "덧셈할 문자열을 입력해 주세요. "
+    );
+
+    try {
+      // 2. 입력받은 문자열을 계산하는 핵심 로직을 작성.
+      //(여기에 커스텀 구분자 처리, 음수 예외 처리 등의 로직이 들어간다.)
+      const result = this.calculate(input);
+
+      // 3. MissionUtils.Console.print()를 사용하여 결과를 출력한다.
+      MissionUtils.Console.print(`결과 : ${result}`);
+    } catch (error) {
+      // 4. 예외(음수 등)가 발생하면 오류 메시지를 출력한다.
+      MissionUtils.Console.print(error.message);
+
+      // 테스트 코드가 toThrow()를 예상하므로, 예외를 다시 던져서 애플리케이션을 종료한다.
+      throw error;
+    }
+  }
+
+  calculate(text) {
+    // 여기에 문자열을 파싱하고 계산하는 로직을 작성한다.
+
+    return 0;
+  }
 }
 
 export default App;
