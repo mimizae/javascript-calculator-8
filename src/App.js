@@ -25,9 +25,18 @@ class App {
   }
 
   calculate(text) {
-    // 여기에 문자열을 파싱하고 계산하는 로직을 작성한다.
+    if (!text) return 0; // 빈 문자열 처리
+    let separators = [",", ":"]; // 기본 구분자 세트
 
-    return 0;
+    const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자 패턴 확인
+
+    const match = text.match(customSeparatorPattern);
+
+    if (match) {
+      const customSeparator = match[1]; // //와 \n 사이 커스텀 구분자 (;)
+      text = match[2]; // 실제 숫자 문자열 부분 (1;2;3)
+      separators = [customSeparator]; // 커스텀 구분자만 사용 (기본은 무시)
+    }
   }
 }
 
