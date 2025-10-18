@@ -37,6 +37,8 @@ class App {
       text = match[2]; // (.*), 실제 숫자 문자열 부분 (1;2;3)
       separators = [customSeparator]; // 커스텀 구분자만 사용 (기본은 무시)
     }
+    const newRegExp = new RegExp("[" + separators.join("") + "]"); // 구분자 배열을 새로운 정규식으로 생성해 split
+    const separatedText = text.split(newRegExp);
   }
 }
 
