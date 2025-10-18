@@ -33,12 +33,18 @@ class App {
     const match = text.match(customSeparatorPattern); // match 메서드를 활용해 패턴
 
     if (match) {
-      const customSeparator = match[1]; // (.+), //와 \n 사이 커스텀 구분자 (;)
+      const customSeparator = match[1].split(""); // (.+), //와 \n 사이 커스텀 구분자 (;)
       text = match[2]; // (.*), 실제 숫자 문자열 부분 (1;2;3)
-      separators = [customSeparator]; // 커스텀 구분자만 사용 (기본은 무시)
+      separators = customSeparator; // 커스텀 구분자만 사용 (기본은 무시)
     }
-    const newRegExp = new RegExp("[" + separators.join("") + "]"); // 구분자 배열을 새로운 정규식으로 생성해 split
+    const escapeSeparatorArr = separators.map((s) =>
+      s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+    const newRegExp = new RegExp("[" + escapeSeparatorArr.join("") + "]"); // 구분자 배열을 새로운 정규식으로 생성해 split
     const separatedText = text.split(newRegExp);
+
+    const sum = separatedText.map(Number).reduce((acc, num) => acc + num, 0);
+    return sum;
   }
 }
 
