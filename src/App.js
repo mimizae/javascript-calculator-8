@@ -28,13 +28,13 @@ class App {
     if (!text) return 0; // 빈 문자열 처리
     let separators = [",", ":"]; // 기본 구분자 세트
 
-    const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자 패턴 확인
+    const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자를 담는 패턴
 
-    const match = text.match(customSeparatorPattern);
+    const match = text.match(customSeparatorPattern); // match 메서드를 활용해 패턴
 
     if (match) {
-      const customSeparator = match[1]; // //와 \n 사이 커스텀 구분자 (;)
-      text = match[2]; // 실제 숫자 문자열 부분 (1;2;3)
+      const customSeparator = match[1]; // (.+), //와 \n 사이 커스텀 구분자 (;)
+      text = match[2]; // (.*), 실제 숫자 문자열 부분 (1;2;3)
       separators = [customSeparator]; // 커스텀 구분자만 사용 (기본은 무시)
     }
   }
