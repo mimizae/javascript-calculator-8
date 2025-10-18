@@ -28,6 +28,13 @@ class App {
     if (!text) return 0; // 빈 문자열 처리
     let separators = [",", ":"]; // 기본 구분자 세트
 
+    const misplacedPattern = /.+\/\/.+\n/; // 문자열 중간에 '//~\n'이 존재하는지 검사
+    if (misplacedPattern.test(text)) {
+      throw new Error(
+        "[ERROR]: 커스텀 구분자 지정은 문자열 맨 앞 부분에서 해주세요."
+      );
+    }
+
     const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자를 담는 패턴
 
     const match = text.match(customSeparatorPattern); // match 메서드를 활용해 패턴
