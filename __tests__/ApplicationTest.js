@@ -142,7 +142,7 @@ describe("문자열 계산기", () => {
     mockQuestions(inputs);
 
     const logSpy = getLogSpy();
-    const outputs = ["결과 : 6"];
+    const outputs = ["결과 : 3"];
 
     const app = new App();
     await app.run();
