@@ -86,8 +86,8 @@ describe("문자열 계산기", () => {
     });
   });
 
-  test("커스텀 구분자와 기본 구분자 모두 사용 (//-*\n1-2*3:4,11)", async () => {
-    const inputs = ["//-*\\n1-2*3"];
+  test("커스텀 구분자와 기본 구분자 모두 사용", async () => {
+    const inputs = ["//-*\n1-2*3:4,11"];
     mockQuestions(inputs);
 
     const logSpy = getLogSpy();
@@ -135,5 +135,20 @@ describe("문자열 계산기", () => {
     const app = new App();
 
     await expect(app.run()).rejects.toThrow("[ERROR]");
+  });
+
+  test("숫자 외 값은 무시되고 숫자만 더해짐", async () => {
+    const inputs = ["1,hello:2,3abc"];
+    mockQuestions(inputs);
+
+    const logSpy = getLogSpy();
+    const outputs = ["결과 : 6"];
+
+    const app = new App();
+    await app.run();
+
+    outputs.forEach((output) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+    });
   });
 });
