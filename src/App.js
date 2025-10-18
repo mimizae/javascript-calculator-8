@@ -26,6 +26,10 @@ class App {
 
   calculate(text) {
     if (!text) return 0; // 빈 문자열 처리
+
+    // 입력에서 \n을 실제 줄바꿈 문자로 교체
+    text = text.replace(/\\n/g, "\n");
+
     let separators = [",", ":"]; // 기본 구분자 세트
 
     const misplacedPattern = /.+\/\/.+\n/; // 문자열 중간에 '//~\n'이 존재하는지 검사
