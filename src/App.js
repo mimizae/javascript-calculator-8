@@ -51,8 +51,8 @@ class App {
         );
       }
 
-      text = match[2]; // (.*), 실제 숫자 문자열 부분 (1;2;3)
-      separators = customSeparator; // 커스텀 구분자만 사용 (기본은 무시)
+      text = match[2]; // (.*), 실제 숫자 문자열 부분
+      separators = separators.concat(customSeparator); // 커스텀 구분자 + 기본 구분자
     }
     const escapeSeparatorArr = separators.map((s) =>
       s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
@@ -60,7 +60,10 @@ class App {
     const newRegExp = new RegExp("[" + escapeSeparatorArr.join("") + "]"); // 구분자 배열을 새로운 정규식으로 생성해 split
     const separatedText = text.split(newRegExp);
 
-    const sum = separatedText.map(Number).reduce((acc, num) => acc + num, 0);
+    // 숫자만 추출
+    const numbers = separatedText.map(Number).filter((n) => !isNaN(n));
+
+    const sum = numbers.map(Number).reduce((acc, num) => acc + num, 0);
     return sum;
   }
 }
