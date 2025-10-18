@@ -40,4 +40,100 @@ describe("문자열 계산기", () => {
 
     await expect(app.run()).rejects.toThrow("[ERROR]");
   });
+
+  test("빈 문자열 입력 시 0 출력", async () => {
+    const inputs = [""];
+    mockQuestions(inputs);
+
+    const logSpy = getLogSpy();
+    const outputs = ["결과 : 0"];
+
+    const app = new App();
+    await app.run();
+
+    outputs.forEach((output) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+    });
+  });
+
+  test("기본 구분자(, :)로 구분된 숫자 합산", async () => {
+    const inputs = ["1,2:3"];
+    mockQuestions(inputs);
+
+    const logSpy = getLogSpy();
+    const outputs = ["결과 : 6"];
+
+    const app = new App();
+    await app.run();
+
+    outputs.forEach((output) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+    });
+  });
+
+  test("커스텀 구분자 여러 개 사용 (//-*\n1-2*3)", async () => {
+    const inputs = ["//-*\\n1-2*3"];
+    mockQuestions(inputs);
+
+    const logSpy = getLogSpy();
+    const outputs = ["결과 : 6"];
+
+    const app = new App();
+    await app.run();
+
+    outputs.forEach((output) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+    });
+  });
+
+  test("커스텀 구분자와 기본 구분자 모두 사용 (//-*\n1-2*3:4,11)", async () => {
+    const inputs = ["//-*\\n1-2*3"];
+    mockQuestions(inputs);
+
+    const logSpy = getLogSpy();
+    const outputs = ["결과 : 21"];
+
+    const app = new App();
+    await app.run();
+
+    outputs.forEach((output) => {
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining(output));
+    });
+  });
+
+  test("문자 또는 공백을 커스텀 구분자로 지정하면 에러", async () => {
+    const inputs = ["//a\\n1a2a3"];
+    mockQuestions(inputs);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow("[ERROR]");
+  });
+
+  test("문자 또는 공백을 커스텀 구분자로 지정하면 에러", async () => {
+    const inputs = ["// \\n1a2a3"];
+    mockQuestions(inputs);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow("[ERROR]");
+  });
+
+  test("커스텀 구분자가 문자열 중간에 나오면 에러", async () => {
+    const inputs = ["1,2//;\\n3"];
+    mockQuestions(inputs);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow("[ERROR]");
+  });
+
+  test("커스텀 구분자가 문자열 마지막에 나오면 에러", async () => {
+    const inputs = ["1,23//;\\n"];
+    mockQuestions(inputs);
+
+    const app = new App();
+
+    await expect(app.run()).rejects.toThrow("[ERROR]");
+  });
 });
