@@ -63,6 +63,12 @@ class App {
     // 숫자만 추출
     const numbers = separatedText.map(Number).filter((n) => !isNaN(n));
 
+    // 음수 검사 추가
+    const negatives = numbers.filter((n) => n < 0);
+    if (negatives.length > 0) {
+      throw new Error("[ERROR]: 음수는 입력할 수 없습니다.");
+    }
+
     const sum = numbers.map(Number).reduce((acc, num) => acc + num, 0);
     return sum;
   }
