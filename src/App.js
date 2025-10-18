@@ -58,10 +58,14 @@ class App {
       text = match[2]; // (.*), 실제 숫자 문자열 부분
       separators = separators.concat(customSeparator); // 커스텀 구분자 + 기본 구분자
     }
-    const escapeSeparatorArr = separators.map((s) =>
-      s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    // 구분자 배열을 안전하게 escape
+    const escapeSeparatorArr = separators.map(
+      (s) => s.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&") // 더 안전한 escape 세트
     );
-    const newRegExp = new RegExp("[" + escapeSeparatorArr.join("") + "]"); // 구분자 배열을 새로운 정규식으로 생성해 split
+
+    // 하이픈은 문자 클래스 안에서 범위로 인식되므로, 별도 처리
+    const escapedPattern = escapeSeparatorArr.join("|"); // |로 OR 연결
+    const newRegExp = new RegExp(escapedPattern); // 구분자 하나라도 매칭되면 split
     const separatedText = text.split(newRegExp);
 
     // 숫자만 추출
