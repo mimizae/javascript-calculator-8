@@ -37,10 +37,20 @@ class App {
 
     const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자를 담는 패턴
 
-    const match = text.match(customSeparatorPattern); // match 메서드를 활용해 패턴
+    const match = text.match(customSeparatorPattern); // match 메서드를 활용해 커스텀 구분자가 뭔지 확인
 
     if (match) {
-      const customSeparator = match[1].split(""); // (.+), //와 \n 사이 커스텀 구분자 (;)
+      const customSeparator = match[1].split(""); // (.+), 모든 문자를 각각 구분자로 취급
+      const invalidSeparator = customSeparator.find((char) =>
+        /[a-zA-Z가-힣\s]/.test(char)
+      ); // 문자 및 공백을 커스텀 구분자 지정 부분에 포함 시켰는지 확인
+
+      if (invalidSeparator) {
+        throw new Error(
+          "[ERROR]: 글자 및 공백은 커스텀 구분자로 지정할 수 없습니다."
+        );
+      }
+
       text = match[2]; // (.*), 실제 숫자 문자열 부분 (1;2;3)
       separators = customSeparator; // 커스텀 구분자만 사용 (기본은 무시)
     }
