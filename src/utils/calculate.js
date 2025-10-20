@@ -1,3 +1,9 @@
+import {
+  validateCustomSeparatorPosition,
+  validateCustomSeparators,
+  validateNoNegatives,
+} from "./error-validators";
+
 export function calculate(text) {
   if (!text) return 0; // 빈 문자열 처리
 
@@ -6,12 +12,7 @@ export function calculate(text) {
 
   let separators = [",", ":"]; // 기본 구분자 세트
 
-  const misplacedPattern = /.+\/\/.+\n/; // 문자열 중간에 '//~\n'이 존재하는지 검사
-  if (misplacedPattern.test(text)) {
-    throw new Error(
-      "[ERROR]: 커스텀 구분자 지정은 문자열 맨 앞 부분에서 해주세요."
-    );
-  }
+  validateCustomSeparatorPosition(text); // 문자열 중간에 '//~\n'이 존재하는지 검사
 
   const customSeparatorPattern = /^\/\/(.+)\n(.*)$/; // 커스텀 구분자를 담는 패턴
 
@@ -19,15 +20,8 @@ export function calculate(text) {
 
   if (match) {
     const customSeparator = match[1].split(""); // (.+), 모든 문자를 각각 구분자로 취급
-    const invalidSeparator = customSeparator.find((char) =>
-      /[a-zA-Z가-힣\s]/.test(char)
-    ); // 문자 및 공백을 커스텀 구분자 지정 부분에 포함 시켰는지 확인
 
-    if (invalidSeparator) {
-      throw new Error(
-        "[ERROR]: 글자 및 공백은 커스텀 구분자로 지정할 수 없습니다."
-      );
-    }
+    validateCustomSeparators(customSeparator); // 문자 및 공백을 커스텀 구분자 지정 부분에 포함 시켰는지 확인
 
     text = match[2]; // (.*), 실제 숫자 문자열 부분
     separators = separators.concat(customSeparator); // 커스텀 구분자 + 기본 구분자
@@ -45,11 +39,7 @@ export function calculate(text) {
   // 숫자만 추출
   const numbers = separatedText.map(Number).filter((n) => !isNaN(n));
 
-  // 음수 검사 추가
-  const negatives = numbers.filter((n) => n < 0);
-  if (negatives.length > 0) {
-    throw new Error("[ERROR]: 음수는 입력할 수 없습니다.");
-  }
+  validateNoNegatives(numbers); // 음수 검사
 
   const sum = numbers.map(Number).reduce((acc, num) => acc + num, 0);
   return sum;
